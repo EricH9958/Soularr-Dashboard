@@ -2841,3 +2841,89 @@
 [INFO|soularr|L436] 2024-12-08T15:31:38-0800: Starting Lidarr import for: Jimmy Page ID: 30055
 [INFO|soularr|L436] 2024-12-08T15:31:38-0800: Starting Lidarr import for: John Cale ID: 30056
 [INFO|soularr|L436] 2024-12-08T15:31:38-0800: Starting Lidarr import for: Missing Persons ID: 30057
+[INFO|soularr|L451] 2024-12-08T15:32:41-0800: Downloaded Albums Scan Importing 55 tracks from: /mnt/Plex11/slskd/complete/The Allman Brothers Band
+[INFO|soularr|L451] 2024-12-08T15:32:41-0800: Downloaded Albums Scan Failed to import from: /mnt/Plex11/slskd/complete/2017 - Don't Get Lost
+[INFO|soularr|L477] 2024-12-08T15:32:41-0800: Failed import moved to: failed_imports/2017 - Don't Get Lost_1
+[INFO|soularr|L451] 2024-12-08T15:32:41-0800: Downloaded Albums Scan Failed to import from: /mnt/Plex11/slskd/complete/Dr Feelgood
+[INFO|soularr|L477] 2024-12-08T15:32:41-0800: Failed import moved to: failed_imports/Dr Feelgood
+[INFO|soularr|L451] 2024-12-08T15:32:41-0800: Downloaded Albums Scan Failed to import from: /mnt/Plex11/slskd/complete/Jimmy Page
+[INFO|soularr|L477] 2024-12-08T15:32:41-0800: Failed import moved to: failed_imports/Jimmy Page
+[INFO|soularr|L451] 2024-12-08T15:32:41-0800: Downloaded Albums Scan Importing 6 tracks from: /mnt/Plex11/slskd/complete/John Cale
+[INFO|soularr|L451] 2024-12-08T15:32:41-0800: Downloaded Albums Scan Importing 12 tracks from: /mnt/Plex11/slskd/complete/Missing Persons
+[INFO|soularr|L626] 2024-12-08T15:32:41-0800: Solarr finished. Exiting...
+[INFO|soularr|L157] 2024-12-08T15:32:45-0800: Selected release for Led Zeppelin: Official, Japan, 2xCD, Mediums: 2, Tracks: 23, ID: 43213
+[INFO|soularr|L299] 2024-12-08T15:32:45-0800: Searching track: Led Zeppelin Good Times Bad Times
+[INFO|soularr|L191] 2024-12-08T15:32:46-0800: Search returned 100 results
+[INFO|soularr|L195] 2024-12-08T15:32:46-0800: Parsing result from user: makemusicnotwar
+[INFO|soularr|L58] 2024-12-08T15:32:47-0800: Found match from user: makemusicnotwar for 13 tracks!
+[INFO|soularr|L59] 2024-12-08T15:32:47-0800: Average sequence match ratio: 0.876612107605581
+[INFO|soularr|L60] 2024-12-08T15:32:47-0800: SUCCESSFUL MATCH
+[INFO|soularr|L61] 2024-12-08T15:32:47-0800: -------------------
+[INFO|soularr|L299] 2024-12-08T15:32:50-0800: Searching track: Led Zeppelin The Song Remains the Same
+[INFO|soularr|L191] 2024-12-08T15:32:51-0800: Search returned 100 results
+[INFO|soularr|L195] 2024-12-08T15:32:51-0800: Parsing result from user: makemusicnotwar
+[INFO|soularr|L58] 2024-12-08T15:32:51-0800: Found match from user: makemusicnotwar for 10 tracks!
+[INFO|soularr|L59] 2024-12-08T15:32:51-0800: Average sequence match ratio: 0.8505554952964328
+[INFO|soularr|L60] 2024-12-08T15:32:51-0800: SUCCESSFUL MATCH
+[INFO|soularr|L61] 2024-12-08T15:32:51-0800: -------------------
+[INFO|soularr|L157] 2024-12-08T15:32:54-0800: Selected release for Guided by Voices: Official, Europe, CD, Mediums: 1, Tracks: 15, ID: 93998
+[INFO|soularr|L280] 2024-12-08T15:32:54-0800: Searching album: Guided by Voices Earthquake Glue
+[INFO|soularr|L191] 2024-12-08T15:33:06-0800: Search returned 60 results
+[INFO|soularr|L195] 2024-12-08T15:33:06-0800: Parsing result from user: reilly
+[INFO|soularr|L58] 2024-12-08T15:33:06-0800: Found match from user: reilly for 15 tracks!
+[INFO|soularr|L59] 2024-12-08T15:33:06-0800: Average sequence match ratio: 0.9117072355840471
+[INFO|soularr|L60] 2024-12-08T15:33:06-0800: SUCCESSFUL MATCH
+[INFO|soularr|L61] 2024-12-08T15:33:06-0800: -------------------
+[INFO|soularr|L299] 2024-12-08T15:33:10-0800: Searching track: Michael Bublé Fever
+[INFO|soularr|L191] 2024-12-08T15:33:20-0800: Search returned 66 results
+[INFO|soularr|L195] 2024-12-08T15:33:20-0800: Parsing result from user: twiztor
+[INFO|soularr|L195] 2024-12-08T15:33:20-0800: Parsing result from user: makemusicnotwar
+[INFO|soularr|L58] 2024-12-08T15:33:21-0800: Found match from user: makemusicnotwar for 13 tracks!
+[INFO|soularr|L59] 2024-12-08T15:33:21-0800: Average sequence match ratio: 0.8578163242708818
+[INFO|soularr|L60] 2024-12-08T15:33:21-0800: SUCCESSFUL MATCH
+[INFO|soularr|L61] 2024-12-08T15:33:21-0800: -------------------
+[INFO|soularr|L299] 2024-12-08T15:33:24-0800: Searching track: Michael Bublé Let It Snow Let It Snow Let It Snow
+[INFO|soularr|L191] 2024-12-08T15:33:32-0800: Search returned 45 results
+[INFO|soularr|L195] 2024-12-08T15:33:32-0800: Parsing result from user: makemusicnotwar
+[INFO|soularr|L195] 2024-12-08T15:33:32-0800: Parsing result from user: PhinOkkio
+[INFO|soularr|L195] 2024-12-08T15:33:33-0800: Parsing result from user: thisisme
+[INFO|soularr|L195] 2024-12-08T15:33:33-0800: Parsing result from user: natx10
+[INFO|soularr|L195] 2024-12-08T15:33:33-0800: Parsing result from user: leitunggeist
+[INFO|soularr|L195] 2024-12-08T15:33:34-0800: Parsing result from user: cd061184
+[INFO|soularr|L195] 2024-12-08T15:33:34-0800: Parsing result from user: BladeRelic
+[INFO|soularr|L195] 2024-12-08T15:33:34-0800: Parsing result from user: thedeadinme
+[INFO|soularr|L195] 2024-12-08T15:33:34-0800: Parsing result from user: tropator
+[INFO|soularr|L58] 2024-12-08T15:33:34-0800: Found match from user: tropator for 5 tracks!
+[INFO|soularr|L59] 2024-12-08T15:33:34-0800: Average sequence match ratio: 0.6796807832524815
+[INFO|soularr|L60] 2024-12-08T15:33:34-0800: SUCCESSFUL MATCH
+[INFO|soularr|L61] 2024-12-08T15:33:34-0800: -------------------
+[INFO|soularr|L157] 2024-12-08T15:33:39-0800: Selected release for The Wedding Present: Official, United Kingdom, CD, Mediums: 1, Tracks: 11, ID: 96642
+[INFO|soularr|L280] 2024-12-08T15:33:39-0800: Searching album: The Wedding Present El Rey
+[INFO|soularr|L191] 2024-12-08T15:33:48-0800: Search returned 16 results
+[INFO|soularr|L195] 2024-12-08T15:33:48-0800: Parsing result from user: thither
+[INFO|soularr|L58] 2024-12-08T15:33:48-0800: Found match from user: thither for 11 tracks!
+[INFO|soularr|L59] 2024-12-08T15:33:48-0800: Average sequence match ratio: 0.8136850686794467
+[INFO|soularr|L60] 2024-12-08T15:33:48-0800: SUCCESSFUL MATCH
+[INFO|soularr|L61] 2024-12-08T15:33:48-0800: -------------------
+[INFO|soularr|L157] 2024-12-08T15:33:50-0800: Selected release for Al Di Meola: Official, United States, CD, Mediums: 1, Tracks: 12, ID: 92099
+[INFO|soularr|L280] 2024-12-08T15:33:50-0800: Searching album: Al Di Meola Electric Anthology
+[INFO|soularr|L191] 2024-12-08T15:33:57-0800: Search returned 9 results
+[INFO|soularr|L195] 2024-12-08T15:33:57-0800: Parsing result from user: bigkahuna30266
+[INFO|soularr|L195] 2024-12-08T15:33:57-0800: Parsing result from user: helpppp
+[INFO|soularr|L58] 2024-12-08T15:33:57-0800: Found match from user: helpppp for 12 tracks!
+[INFO|soularr|L59] 2024-12-08T15:33:57-0800: Average sequence match ratio: 0.8955263077313895
+[INFO|soularr|L60] 2024-12-08T15:33:57-0800: SUCCESSFUL MATCH
+[INFO|soularr|L61] 2024-12-08T15:33:57-0800: -------------------
+[INFO|soularr|L327] 2024-12-08T15:34:00-0800: Downloads added:
+[INFO|soularr|L333] 2024-12-08T15:34:00-0800: Username: braindead42 Directory: @@bdlxa\albums-by-artist\Williamson, Sonny Boy [us]\Williamson, Sonny Boy - 1968 - One Way Out @320
+[INFO|soularr|L333] 2024-12-08T15:34:00-0800: Username: nihilus314 Directory: Música\John Coltrane Quartet\Coltrane
+[INFO|soularr|L333] 2024-12-08T15:34:00-0800: Username: oksi4 Directory: music\Brian Eno performed by Ensemble Dedalus\Discreet Music _ Music for Airports _ Thursday Afternoon
+[INFO|soularr|L333] 2024-12-08T15:34:00-0800: Username: makemusicnotwar Directory: MP3\Led Zeppelin\Early Days_ The Best of Led Zeppelin, Volume One (1999)
+[INFO|soularr|L333] 2024-12-08T15:34:00-0800: Username: makemusicnotwar Directory: MP3\Led Zeppelin\Latter Days_ The Best of Led Zeppelin, Volume Two (2000)
+[INFO|soularr|L333] 2024-12-08T15:34:00-0800: Username: makemusicnotwar Directory: FLAC\Michael Bublé\Michael Bublé (2003)
+[INFO|soularr|L333] 2024-12-08T15:34:00-0800: Username: reilly Directory: @@iipac\MUSIC\Guided by Voices\Earthquake Glue
+[INFO|soularr|L333] 2024-12-08T15:34:00-0800: Username: tropator Directory: @@yhwnv\LibLosless\Michael Buble - Let It Snow (2003) [FLAC]
+[INFO|soularr|L333] 2024-12-08T15:34:00-0800: Username: thither Directory: @@xrknr\music\The Wedding Present\The Wedding Present - 2008 - El Rey
+[INFO|soularr|L333] 2024-12-08T15:34:00-0800: Username: helpppp Directory: Music\Al Di Meola\Electric Anthology
+[INFO|soularr|L335] 2024-12-08T15:34:00-0800: -------------------
+[INFO|soularr|L336] 2024-12-08T15:34:00-0800: Waiting for downloads... monitor at: http://localhost:5030/downloads
