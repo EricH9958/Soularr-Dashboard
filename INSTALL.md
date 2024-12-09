@@ -65,7 +65,15 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 CMD ["gunicorn", "--bind", "0.0.0.0:8080", "dashboard:app"]
 
-4. Create index.html in /home/<user>/Soularr/dashboard/templates/:
+4. Create failure_list.txt in /home/<user>/Soularr/:
+
+touch /home/<user>/Soularr/failure_list.txt
+chmod 644 /home/<user>/Soularr/failure_list.txt
+
+
+
+
+5. Create index.html in /home/<user>/Soularr/dashboard/templates/:
 
 <!DOCTYPE html>
 <html>
@@ -156,7 +164,7 @@ CMD ["gunicorn", "--bind", "0.0.0.0:8080", "dashboard:app"]
 </body>
 </html>
 
-5. Add dashboard service to your docker-compose.yml:
+6. Add dashboard service to your docker-compose.yml:
 
   dashboard:
     build:
@@ -176,11 +184,11 @@ CMD ["gunicorn", "--bind", "0.0.0.0:8080", "dashboard:app"]
       - /var/run/docker.sock:/var/run/docker.sock
     working_dir: /app
 
-6. Build and Start:
+7. Build and Start:
 docker compose down
 docker compose build dashboard
 docker compose up -d
 
-7. Access:
+8. Access:
 Open your web browser and navigate to: http://your-server-ip:8080
 

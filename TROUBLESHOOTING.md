@@ -14,6 +14,13 @@
    - Check file ownership: chown root:root /data/failure_list.txt
    - Set correct permissions: chmod 644 /data/failure_list.txt
 
+3. Error: "Empty or missing failure list"
+   Solution:
+   - Verify failure_list.txt exists: touch /home/<user>/Soularr/failure_list.txt
+   - Check permissions: chmod 644 /home/<user>/Soularr/failure_list.txt
+   - Ensure docker-compose.yml has correct volume mapping for /data
+
+
 ### Docker Container Issues
 1. Error: "Container soularr-dashboard not starting"
    Solution:
