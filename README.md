@@ -1,5 +1,8 @@
 # Soularr Dashboard
 
+![Soularr Dashboard](images/Soularr-dashboard_final.png)
+
+
 A web interface that displays Soularr logs and failure list in real-time using a dual-window display.
 
 ## What it Does
@@ -25,7 +28,6 @@ docker compose up -d
 ## Usage
 Open your web browser and go to:
 http://your-server-ip:8080
-
 
 ## License
 This project is licensed under the MIT License - see the LICENSE.txt file for details
