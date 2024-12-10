@@ -9,18 +9,48 @@ mkdir -p /home/<user>/Soularr/dashboard/templates
 1. Create dashboard.py in /home/<user>/Soularr/dashboard/:
 
 from flask import Flask, render_template
+from flask_socketio import SocketIO
 import json
 import subprocess
+import time
+import re
+from datetime import datetime
+import threading
 
 app = Flask(__name__)
+socketio = SocketIO(app)
+
+def monitor_logs():
+    try:
+        with open('/data/soularr.log', 'r') as log_file:
+            log_file.seek(0, 2)  # Move to end of file
+            while True:
+                line = log_file.readline()
+                if not line:
+                    time.sleep(1)
+                    continue
+
+                # Emit log update to dashboard
+                socketio.emit('log_update', {'data': line})
+
+                # Check for both types of failures
+                import_match = re.search(r'Failed to import from: .+/complete/(.+)', line)
+                move_match = re.search(r'Failed import moved to: failed_imports/(.+)', line)
+
+                if import_match or move_match:
+                    artist_name = import_match.group(1) if import_match else move_match.group(1)
+                    current_time = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+                    failure_entry = f"{current_time} - {artist_name}, Failed Import\n"
+                    with open('/data/failure_list.txt', 'a') as outfile:
+                        outfile.write(failure_entry)
+    except Exception as e:
+        print(f"Error in monitor_logs: {str(e)}")
 
 def get_docker_logs():
     try:
-        # Read from soularr log file
         with open('/data/soularr.log', 'r') as f:
             logs = f.readlines()
-            # Get last 50 lines and reverse them
-            return logs[-50:][::-1]
+            return logs[-100:][::-1]
     except Exception as e:
         return [f"Error accessing logs: {str(e)}"]
 
@@ -31,13 +61,10 @@ def index():
 @app.route('/logs')
 def get_logs():
     try:
-        # Get soularr logs
         docker_logs = get_docker_logs()
-        
-        # Get failure list
         with open('/data/failure_list.txt', 'r') as f:
             failure_logs = f.readlines()
-        
+
         return json.dumps({
             'docker_logs': docker_logs,
             'failure_logs': failure_logs
@@ -49,12 +76,21 @@ def get_logs():
         })
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+    # Start the log monitoring thread
+    monitor_thread = threading.Thread(target=monitor_logs, daemon=True)
+    monitor_thread.start()
+    
+    # Run the Flask-SocketIO app
+    socketio.run(app, host='0.0.0.0', port=8080, debug=False)
 
 2. Create requirements.txt in /home/<user>/Soularr/dashboard/:
 
 flask==3.0.0
+flask-socketio==5.3.6
+python-socketio==5.10.0
+python-engineio==4.8.0
 gunicorn==21.2.0
+eventlet==0.33.3
 
 3. Create Dockerfile in /home/<user>/Soularr/dashboard/:
 
@@ -63,17 +99,20 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "dashboard:app"]
+CMD ["python", "dashboard.py"]
 
 4. Create failure_list.txt in /home/<user>/Soularr/:
 
 touch /home/<user>/Soularr/failure_list.txt
 chmod 644 /home/<user>/Soularr/failure_list.txt
 
+5. Create config.ini.example in /home/<user>/Soularr/:
 
+[credentials]
+api_key = YOUR_API_KEY_HERE
+private_token = YOUR_TOKEN_HERE
 
-
-5. Create index.html in /home/<user>/Soularr/dashboard/templates/:
+6. Create index.html in /home/<user>/Soularr/dashboard/templates/:
 
 <!DOCTYPE html>
 <html>
@@ -123,6 +162,7 @@ chmod 644 /home/<user>/Soularr/failure_list.txt
             font-size: 18px;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 </head>
 <body>
     <h1>Soularr Log Monitor</h1>
@@ -137,16 +177,18 @@ chmod 644 /home/<user>/Soularr/failure_list.txt
         </div>
     </div>
     <script>
+        const socket = io();
+        
         function updateLogs() {
             fetch('/logs')
                 .then(r => r.json())
                 .then(data => {
                     if (data.docker_logs) {
-                        document.getElementById('docker-logs').innerHTML = 
+                        document.getElementById('docker-logs').innerHTML =
                             data.docker_logs.join('\n');
                     }
                     if (data.failure_logs) {
-                        document.getElementById('failure-logs').innerHTML = 
+                        document.getElementById('failure-logs').innerHTML =
                             data.failure_logs.join('');
                     }
                 })
@@ -154,17 +196,22 @@ chmod 644 /home/<user>/Soularr/failure_list.txt
                     console.error('Error:', error);
                 });
         }
-        
+
+        socket.on('log_update', function(data) {
+            const dockerLogs = document.getElementById('docker-logs');
+            dockerLogs.innerHTML = data.data + dockerLogs.innerHTML;
+        });
+
         // Initial load
         updateLogs();
-        
+
         // Refresh every second
         setInterval(updateLogs, 1000);
     </script>
 </body>
 </html>
 
-6. Add dashboard service to your docker-compose.yml:
+7. Add dashboard service to your docker-compose.yml:
 
   dashboard:
     build:
@@ -184,11 +231,18 @@ chmod 644 /home/<user>/Soularr/failure_list.txt
       - /var/run/docker.sock:/var/run/docker.sock
     working_dir: /app
 
-7. Build and Start:
+8. Configure Scheduled Operation:
+Create a cron job for the current user:
+crontab -e
+
+Add the following lines:
+0 1 * * * cd /home/eric/Soularr && docker compose up -d
+0 6 * * * cd /home/eric/Soularr && docker compose down
+
+9. Build and Start:
 docker compose down
 docker compose build dashboard
 docker compose up -d
 
-8. Access:
+10. Access:
 Open your web browser and navigate to: http://your-server-ip:8080
-
