@@ -4,7 +4,7 @@
 
 ### Failure Detection
 - Automatically detects two types of import failures:
-   - Initial failures: `Failed to import from: /mnt/Plex11/slskd/complete/[album]`
+   - Initial failures: `Failed to import from: /path/to/downloads/complete/[album]` 
    - Move confirmations: `Failed import moved to: failed_imports/[album]`
    - Logs failures with timestamps to failure_list.txt
    - Displays failures in dedicated dashboard window
@@ -12,8 +12,8 @@
 ### Scheduled Operation
 - Can be configured to run during off-peak hours (1 AM - 6 AM)
 - Uses cron for scheduling:
-   - Start: 0 1 * * * cd /home/eric/Soularr && docker compose up -d
-   - Stop: 0 6 * * * cd /home/eric/Soularr && docker compose down
+   - Start: 0 1 * * * cd /home/<user>/Soularr && docker compose up -d
+   - Stop: 0 6 * * * cd /home/<user>/Soularr && docker compose down
 - State and progress preserved between sessions
 
 ### Log File Access Problems

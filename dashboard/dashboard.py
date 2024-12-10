@@ -1,4 +1,3 @@
-# /home/eric/Soularr/dashboard/dashboard.py
 from flask import Flask, render_template
 from flask_socketio import SocketIO
 import json
@@ -73,4 +72,5 @@ if __name__ == '__main__':
     monitor_thread.start()
     
     # Run the Flask-SocketIO app
-    socketio.run(app, host='0.0.0.0', port=8080, debug=False)
+    socketio.run(app, host='0.0.0.0', port=8080,
+debug=False, allow_unsafe_werkzeug=True)    

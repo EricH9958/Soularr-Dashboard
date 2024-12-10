@@ -236,9 +236,8 @@ Create a cron job for the current user:
 crontab -e
 
 Add the following lines:
-0 1 * * * cd /home/eric/Soularr && docker compose up -d
-0 6 * * * cd /home/eric/Soularr && docker compose down
-
+0 1 * * * cd /home/<user>/Soularr && docker compose up -d
+0 6 * * * cd /home/<user>/Soularr && docker compose down
 9. Build and Start:
 docker compose down
 docker compose build dashboard

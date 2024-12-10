@@ -1,3 +1,21 @@
+# Sensitive files
 config.ini
+*.env
+**/config.ini
+
+# Runtime and temp files
+soularr.log
 .current_page.txt
 failure_list.txt
+docker-compose.yml
+dashboard/templates/index.html
+
+# Cache and system files
+__pycache__/
+*.pyc
+*.bak
+.DS_Store
+
+# IDE specific
+.vscode/
+.idea/

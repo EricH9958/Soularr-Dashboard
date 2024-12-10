@@ -33,8 +33,8 @@
 ### Scheduled Operation
 - Default run time: 1 AM - 6 AM
 - Cron configuration:
-  0 1 * * * cd /home/eric/Soularr && docker compose up -d
-  0 6 * * * cd /home/eric/Soularr && docker compose down
+  0 1 * * * cd /home/<user>/Soularr && docker compose up -d
+  0 6 * * * cd /home/<user>/Soularr && docker compose down
 
 ### Visual Customization
 Modify these values in templates/index.html:
