@@ -1,5 +1,5 @@
 [Lidarr]
-api_key = 3938495fe0aa46e389429ceb09ad7618 
+api_key = YOUR_API_KEY_HERE 
 host_url = http://localhost:8686
 #This should be the path mounted in lidarr that points to your slskd download directory.
 #If Lidarr is not running in Docker then this may just be the same dir as Slskd is using below.
@@ -7,7 +7,7 @@ download_dir = /mnt/Plex11/slskd/complete
 
 [Slskd]
 #Api key from Slskd. Need to set this up manually. See link to Slskd docs above.
-api_key = zs9XYCbTPKvux46U
+api_key = YOUR_API_KEY_HERE
 host_url = http://localhost:5030
 #Slskd download directory. Should have set it up when installing Slskd.
 download_dir = /mnt/Plex11/slskd/complete
@@ -49,7 +49,7 @@ search_type = incrementing_page
 number_of_albums_to_grab = 5 
 #Unmonitors the album if Soularr can't find it and places it in "failure_list.txt". 
 #Failed albums can be re monitored by filtering "Unmonitored" in the Lidarr wanted list.
-remove_wanted_on_failure = False 
+remove_wanted_on_failure = True 
 #Comma separated list of words that can't be in the title of albums or tracks. Case insensitive.
 title_blacklist = BlacklistWord1,blacklistword2
 
