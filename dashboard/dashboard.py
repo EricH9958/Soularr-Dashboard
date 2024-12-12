@@ -26,13 +26,18 @@ def monitor_logs():
                 # Check for both types of failures
                 import_match = re.search(r'Failed to import from: .+/complete/(.+)', line)
                 move_match = re.search(r'Failed import moved to: failed_imports/(.+)', line)
-                
                 if import_match or move_match:
                     artist_name = import_match.group(1) if import_match else move_match.group(1)
                     current_time = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
                     failure_entry = f"{current_time} - {artist_name}, Failed Import\n"
-                    with open('/data/failure_list.txt', 'a') as outfile:
-                        outfile.write(failure_entry)
+                    # Only write if entry doesn't already exist
+                    with open('/data/failure_list.txt', 'r') as f:
+                        if failure_entry not in f.readlines():
+                            with open('/data/failure_list.txt', 'a') as outfile:
+                                outfile.write(failure_entry)
+    except Exception as e:
+        print(f"Error in monitor_logs: {str(e)}")
+ 
     except Exception as e:
         print(f"Error in monitor_logs: {str(e)}")
 
