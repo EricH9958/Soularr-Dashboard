@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Soularr Log Monitor</title>
+    <title>Soularr Dashboard</title>
     <style>
         body {
             margin: 20px;
@@ -50,7 +50,7 @@
     </style>
 </head>
 <body>
-    <h1>Soularr Log Monitor</h1>
+    <h1>Soularr Dashboard</h1>
     <div class="container">
         <div class="log-section">
             <h2>Docker Logs</h2>
@@ -72,7 +72,7 @@
                     }
                     if (data.failure_logs) {
                         document.getElementById('failure-logs').innerHTML = 
-                            data.failure_logs.join('');
+                            data.failure_logs.reverse().join('');
                     }
                 })
                 .catch(error => {
