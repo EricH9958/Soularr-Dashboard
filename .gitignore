@@ -19,3 +19,6 @@ __pycache__/
 # IDE specific
 .vscode/
 .idea/
+__pycache__/
+*.pyc
+soularr.log

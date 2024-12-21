@@ -7,18 +7,21 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=America/Los_Angeles
-      #Script interval in seconds
       - SCRIPT_INTERVAL=30
-    user: "root:root" 
+    user: "root:root"
     volumes:
       - /mnt/Plex11/slskd/complete:/mnt/Plex11/slskd/complete
-      #"You can set /downloads to whatever you want but will then need to change the Slskd download dir in your config file"
       - /mnt/Plex11/slskd/complete:/downloads
-      #Select where you are storing your config file.
-      #Leave "/data" since thats where the script expects the config file to be
       - /home/eric/Soularr:/data
+      - /home/eric/Soularr/data/logs:/data/logs
     image: mrusse08/soularr:latest
-    command: sh -c "python soularr.py 2>&1 | tee -a /data/soularr.log"
+    command: sh -c "mkdir -p /data/logs && python soularr.py 2>&1 | tee -a /data/logs/soularr.log"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   dashboard:
     build:
       context: ./dashboard
@@ -33,6 +36,7 @@ services:
     volumes:
       - /home/eric/Soularr/dashboard:/app
       - /home/eric/Soularr:/data
+      - /home/eric/Soularr/data/logs:/data/logs
       - /var/run/docker.sock:/var/run/docker.sock
     working_dir: /app
 
