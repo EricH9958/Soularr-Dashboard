@@ -1,8 +1,19 @@
-# Installation Guide for Soularr Dashboard
+Installation Guide for Soularr Dashboard
 
 ## Directory Setup
-1. Create the dashboard directory and templates folder:
+1. Create the required directory structure:
+
 mkdir -p /home/<user>/Soularr/dashboard/templates
+mkdir -p /home/<user>/Soularr/data/logs
+chmod 755 /home/<user>/Soularr/data/logs
+
+### Directory Structure
+
+/home/<user>/Soularr/
+├── data/
+│   └── logs/
+└── dashboard/
+    └── templates/
 
 ## Required Files
 
@@ -16,41 +27,69 @@ import time
 import re
 from datetime import datetime
 import threading
+import os
 
 app = Flask(__name__)
 socketio = SocketIO(app)
 
+# Define constant paths
+LOG_PATH = '/data/logs/soularr.log'
+FAILURE_PATH = '/data/failure_list.txt'
+
+def ensure_directories():
+    """Create necessary directories if they don't exist"""
+    os.makedirs(os.path.dirname(LOG_PATH), exist_ok=True)
+    os.makedirs(os.path.dirname(FAILURE_PATH), exist_ok=True)
+
 def monitor_logs():
-    try:
-        with open('/data/soularr.log', 'r') as log_file:
-            log_file.seek(0, 2)  # Move to end of file
-            while True:
-                line = log_file.readline()
-                if not line:
-                    time.sleep(1)
-                    continue
+    ensure_directories()
 
-                # Emit log update to dashboard
-                socketio.emit('log_update', {'data': line})
+    # Create failure_list.txt if it doesn't exist
+    if not os.path.exists(FAILURE_PATH):
+        open(FAILURE_PATH, 'w').close()
 
-                # Check for both types of failures
-                import_match = re.search(r'Failed to import from: .+/complete/(.+)', line)
-                move_match = re.search(r'Failed import moved to: failed_imports/(.+)', line)
+    while True:
+        try:
+            with open(LOG_PATH, 'r') as log_file:
+                log_file.seek(0, 2)  # Move to end of file
+                while True:
+                    line = log_file.readline()
+                    if not line:
+                        time.sleep(1)
+                        continue
 
-                if import_match or move_match:
-                    artist_name = import_match.group(1) if import_match else move_match.group(1)
-                    current_time = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
-                    failure_entry = f"{current_time} - {artist_name}, Failed Import\n"
-                    with open('/data/failure_list.txt', 'a') as outfile:
-                        outfile.write(failure_entry)
-    except Exception as e:
-        print(f"Error in monitor_logs: {str(e)}")
+                    # Emit log update to dashboard
+                    socketio.emit('log_update', {'data': line})
+
+                    # Check for both types of failures
+                    import_match = re.search(r'Failed to import from: .+/complete/(.+)', line)
+                    move_match = re.search(r'Failed import moved to: failed_imports/(.+)', line)
+                    
+                    if import_match or move_match:
+                        artist_name = import_match.group(1) if import_match else move_match.group(1)
+                        current_time = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+                        failure_entry = f"{current_time} - {artist_name}, Failed Import\n"
+                        
+                        with open(FAILURE_PATH, 'a+') as f:
+                            f.seek(0)
+                            if failure_entry not in f.readlines():
+                                f.write(failure_entry)
+
+        except FileNotFoundError:
+            print(f"Waiting for log file to be created: {LOG_PATH}")
+            time.sleep(5)
+        except Exception as e:
+            print(f"Error in monitor_logs: {str(e)}")
+            time.sleep(5)
 
 def get_docker_logs():
+    """Retrieve the last 50 lines of logs"""
     try:
-        with open('/data/soularr.log', 'r') as f:
+        with open(LOG_PATH, 'r') as f:
             logs = f.readlines()
-            return logs[-100:][::-1]
+            return logs[-50:][::-1]  # Return last 50 lines in reverse order
+    except FileNotFoundError:
+        return ["Log file not found. Waiting for logs to be generated..."]
     except Exception as e:
         return [f"Error accessing logs: {str(e)}"]
 
@@ -62,8 +101,15 @@ def index():
 def get_logs():
     try:
         docker_logs = get_docker_logs()
-        with open('/data/failure_list.txt', 'r') as f:
-            failure_logs = f.readlines()
+        
+        try:
+            with open(FAILURE_PATH, 'r') as f:
+                failure_logs = f.readlines()
+        except FileNotFoundError:
+            open(FAILURE_PATH, 'w').close()
+            failure_logs = []
+        except Exception as e:
+            failure_logs = [f"Error reading failure logs: {str(e)}"]
 
         return json.dumps({
             'docker_logs': docker_logs,
@@ -75,13 +121,22 @@ def get_logs():
             'failure_logs': []
         })
 
-if __name__ == '__main__':
+def main():
+    ensure_directories()
+    
     # Start the log monitoring thread
     monitor_thread = threading.Thread(target=monitor_logs, daemon=True)
     monitor_thread.start()
-    
+
     # Run the Flask-SocketIO app
-    socketio.run(app, host='0.0.0.0', port=8080, debug=False)
+    socketio.run(app, 
+                host='0.0.0.0', 
+                port=8080, 
+                debug=False, 
+                allow_unsafe_werkzeug=True)
+
+if __name__ == '__main__':
+    main()
 
 2. Create requirements.txt in /home/<user>/Soularr/dashboard/:
 
@@ -106,11 +161,13 @@ CMD ["python", "dashboard.py"]
 touch /home/<user>/Soularr/failure_list.txt
 chmod 644 /home/<user>/Soularr/failure_list.txt
 
-5. Create config.ini.example in /home/<user>/Soularr/:
+5. Configure logging in config.ini:
 
-[credentials]
-api_key = YOUR_API_KEY_HERE
-private_token = YOUR_TOKEN_HERE
+[Logging]
+level = INFO
+format = [%(levelname)s|%(module)s|L%(lineno)d] %(asctime)s: %(message)s
+datefmt = %Y-%m-%dT%H:%M:%S%z
+filename = /data/logs/soularr.log
 
 6. Create index.html in /home/<user>/Soularr/dashboard/templates/:
 
@@ -178,7 +235,7 @@ private_token = YOUR_TOKEN_HERE
     </div>
     <script>
         const socket = io();
-        
+
         function updateLogs() {
             fetch('/logs')
                 .then(r => r.json())
@@ -211,7 +268,7 @@ private_token = YOUR_TOKEN_HERE
 </body>
 </html>
 
-7. Add dashboard service to your docker-compose.yml:
+7. Add to docker-compose.yml:
 
   dashboard:
     build:
@@ -224,24 +281,34 @@ private_token = YOUR_TOKEN_HERE
       - PUID=1000
       - PGID=1000
       - TZ=America/Los_Angeles
-    user: "root:root"
     volumes:
       - /home/<user>/Soularr/dashboard:/app
       - /home/<user>/Soularr:/data
+      - /home/<user>/Soularr/data/logs:/data/logs
       - /var/run/docker.sock:/var/run/docker.sock
     working_dir: /app
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 8. Configure Scheduled Operation:
 Create a cron job for the current user:
+
 crontab -e
 
 Add the following lines:
+
 0 1 * * * cd /home/<user>/Soularr && docker compose up -d
 0 6 * * * cd /home/<user>/Soularr && docker compose down
+
 9. Build and Start:
+
 docker compose down
 docker compose build dashboard
 docker compose up -d
 
 10. Access:
 Open your web browser and navigate to: http://your-server-ip:8080
+

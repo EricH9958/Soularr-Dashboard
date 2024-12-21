@@ -2,92 +2,128 @@
 
 ## Common Issues and Solutions
 
-### Failure Detection
-- Automatically detects two types of import failures:
-   - Initial failures: `Failed to import from: /path/to/downloads/complete/[album]` 
-   - Move confirmations: `Failed import moved to: failed_imports/[album]`
-   - Logs failures with timestamps to failure_list.txt
-   - Displays failures in dedicated dashboard window
+### Logs Not Appearing in Dashboard
 
-### Scheduled Operation
-- Can be configured to run during off-peak hours (1 AM - 6 AM)
-- Uses cron for scheduling:
-   - Start: 0 1 * * * cd /home/<user>/Soularr && docker compose up -d
-   - Stop: 0 6 * * * cd /home/<user>/Soularr && docker compose down
-- State and progress preserved between sessions
+1. Check Log File Location
+- Verify /home/<user>/Soularr/data/logs exists
+- Ensure soularr.log is present
+- Check permissions:
+ls -l /home/<user>/Soularr/data/logs/soularr.log
+- Should show: -rw-r--r-- 1 1000 1000
 
-### Log File Access Problems
-1. Error: "No such file or directory: '/data/soularr.log'"
-   Solution:
-   - Verify soularr.log exists
-   - Check permissions: chmod 644 /data/soularr.log
-   - Ensure docker-compose.yml has correct volume mappings
+2. Check Docker Volume Mounts
+- Verify in docker-compose.yml:
+  - /home/<user>/Soularr:/data
+  - /home/<user>/Soularr/data/logs:/data/logs
+- Run: docker compose config
+- Check container can access logs:
+docker exec soularr-dashboard ls -l /data/logs/soularr.log
 
-2. Error: "Permission denied: '/data/failure_list.txt'"
-   Solution:
-   - Check file ownership: chown root:root /data/failure_list.txt
-   - Set correct permissions: chmod 644 /data/failure_list.txt
+3. Check Log Configuration
+- Verify config.ini has correct path:
+filename = /data/logs/soularr.log
+- Ensure log level is set correctly:
+level = INFO
 
-3. Error: "Empty or missing failure list"
-   Solution:
-   - Verify failure_list.txt exists: touch /home/<user>/Soularr/failure_list.txt
-   - Check permissions: chmod 644 /home/<user>/Soularr/failure_list.txt
-   - Ensure docker-compose.yml has correct volume mapping for /data
+### Dashboard Not Loading
 
+1. Check Container Status
+docker compose ps
+docker logs soularr-dashboard
 
-### Docker Container Issues
-1. Error: "Container soularr-dashboard not starting"
-   Solution:
-   - Check logs: docker logs soularr-dashboard
-   - Verify port 8080 is not in use: netstat -tuln | grep 8080
-   - Restart container: docker compose restart dashboard
+2. Check Port Access
+- Verify port 8080 is available:
+netstat -tuln | grep 8080
+- Test local access:
+curl http://localhost:8080
 
-2. Error: "Unable to find group docker"
-   Solution:
-   - Add current user to docker group: usermod -aG docker <user>
-   - Restart Docker service: systemctl restart docker
+3. Check Network Mode
+- Verify 'network_mode: host' in docker-compose.yml
+- Restart container if needed:
+docker compose restart dashboard
 
-### Web Interface Problems
-1. Error: "Cannot connect to dashboard"
-   Solution:
-   - Verify container is running: docker ps
-   - Check container logs: docker logs soularr-dashboard
-   - Ensure port 8080 is accessible
-   - Try accessing via localhost: http://localhost:8080
+### Log Rotation Issues
 
-2. Error: "Logs not updating"
-   Solution:
-   - Check browser console for JavaScript errors
-   - Verify log files are being written to
-   - Restart the dashboard container
+1. Check Docker Logging Config
+- Verify logging settings in docker-compose.yml:
+logging:
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "3"
 
-### Display Issues
-1. Problem: "Log windows not equal size"
-   Solution:
-   - Clear browser cache
-   - Try different browser
-   - Check screen resolution (minimum 1024x768 recommended)
+2. Monitor Log Size
+ls -lh /home/<user>/Soularr/data/logs/
+du -h /home/<user>/Soularr/data/logs/soularr.log
 
-2. Problem: "Text overflow in log windows"
-   Solution:
-   - Horizontal scrolling is enabled by default
-   - Adjust window size in index.html if needed
+3. Manual Log Cleanup (if needed)
+cd /home/<user>/Soularr/data/logs/
+mv soularr.log soularr.log.old
+touch soularr.log
+chmod 644 soularr.log
+docker compose restart
 
-## Quick Commands Reference
-- View dashboard logs:
-  docker logs -f soularr-dashboard
+### Permission Issues
 
-- Restart dashboard:
-  docker compose restart dashboard
+1. Check File Ownership
+ls -l /home/<user>/Soularr/data/logs/
+sudo chown -R 1000:1000 /home/<user>/Soularr/data/logs/
 
-- Check log file permissions:
-  ls -l /data/soularr.log /data/failure_list.txt
+2. Check Directory Permissions
+chmod 755 /home/<user>/Soularr/data/logs
+chmod 644 /home/<user>/Soularr/data/logs/soularr.log
 
-- View running containers:
-  docker ps | grep soularr
+3. Verify Docker User Settings
+- Check PUID and PGID in docker-compose.yml
+- Should match your user:
+id <user>
 
-## Still Having Issues?
-1. Check all file permissions and ownership
-2. Verify all required files are in correct locations
-3. Ensure Docker and Docker Compose are up to date
-4. Check system resources (CPU, memory, disk space)
+### Container Communication Issues
+
+1. Check Network Settings
+docker network ls
+docker compose ps
+
+2. Verify Host Network Mode
+- Both containers should use:
+network_mode: host
+
+3. Check Container Logs
+docker logs soularr
+docker logs soularr-dashboard
+
+### Dashboard Display Issues
+
+1. Check Web Browser Console
+- Open browser developer tools (F12)
+- Look for errors in console
+
+2. Verify WebSocket Connection
+- Check browser network tab
+- Look for socket.io connections
+
+3. Test Dashboard Access
+curl http://localhost:8080
+curl http://your-server-ip:8080
+
+### Quick Reset Procedure
+
+If all else fails:
+1. Stop containers:
+docker compose down
+
+2. Clear logs:
+cd /home/<user>/Soularr/data/logs/
+rm soularr.log*
+touch soularr.log
+chmod 644 soularr.log
+
+3. Reset permissions:
+sudo chown -R 1000:1000 /home/<user>/Soularr/data/logs/
+
+4. Restart containers:
+docker compose up -d
+
+5. Monitor logs:
+docker logs -f soularr-dashboard
+
