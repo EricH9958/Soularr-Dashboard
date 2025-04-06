@@ -1,0 +1,14 @@
+services:
+  dashboard:
+    build: .
+    container_name: soularr-dashboard
+    network_mode: "host" 
+    volumes:
+      - /opt/Soularr_docker/logs:/logs
+      - /opt/Soularr_docker/config:/data
+    environment:
+      - TZ=America/Los_Angeles
+      - LOG_PATH=/logs/soularr.log
+      - FAILURE_PATH=/data/failure_list.txt
+    restart: unless-stopped
+
