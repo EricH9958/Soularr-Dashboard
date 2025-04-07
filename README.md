@@ -370,6 +370,21 @@ A web interface that displays Soularr logs and failure list in real-time using a
 - Port 8080 available
 
 ## Directory Structure
+
+### Docker Installation
+/opt/Soularr_docker/
+├── config/
+├── logs/
+│   └── soularr.log
+├── dashboard/
+│   ├── templates/
+│   ├── dashboard.py
+│   ├── Dockerfile
+│   └── requirements.txt
+├── docker-compose.yml.example
+└── config.ini
+
+### Manual Installation
 /home/<user>/Soularr/
 ├── data/
 │   └── logs/
@@ -382,6 +397,7 @@ A web interface that displays Soularr logs and failure list in real-time using a
 ├── docker-compose.yml
 └── config.ini
 
+
 ## Quick Setup
 1. Clone this repository to your Soularr directory
 2. Add the dashboard service to your docker-compose.yml
@@ -392,7 +408,12 @@ docker compose build dashboard
 docker compose up -d
 
 ## Logging
-Logs are stored in the `/data/logs` directory, which maps to `/home/<user>/Soularr/data/logs` on the host system. The main log file is `soularr.log`.
+
+### Docker Installation
+Logs are stored in the `/data/logs` directory, which maps to `/opt/Soularr_docker/logs` on the host system. The main log file is `soularr.log`. This directory is mounted as a volume in the Docker container, ensuring persistent logging across container restarts.
+
+### Manual Installation
+Logs are stored in the `logs` directory within the Soularr installation folder. For example:
 
 ### Log Configuration
 - Logs are automatically created in the specified directory
