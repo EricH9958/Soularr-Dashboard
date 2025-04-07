@@ -413,7 +413,8 @@ docker compose up -d
 Logs are stored in the `/data/logs` directory, which maps to `/opt/Soularr_docker/logs` on the host system. The main log file is `soularr.log`. This directory is mounted as a volume in the Docker container, ensuring persistent logging across container restarts.
 
 ### Manual Installation
-Logs are stored in the `logs` directory within the Soularr installation folder. For example:
+Logs are stored in the `logs` directory within the Soularr installation folder. For example: /home/<user>/Soularr/logs/soularr.log
+Ensure that the `logs` directory exists and is writable by the Soularr application.
 
 ### Log Configuration
 - Logs are automatically created in the specified directory
