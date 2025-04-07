@@ -1,0 +1,55 @@
+version: "3.9"
+
+services:
+  soularr:
+    restart: unless-stopped
+    container_name: soularr
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Los_Angeles
+      # Script interval in seconds
+      - SCRIPT_INTERVAL=30
+    user: "1000:1000"
+    volumes:
+      # Path to the completed downloads directory (adjust based on your setup)
+      - /path/to/slskd/complete:/downloads
+      # Path to the Soularr configuration directory
+      - /opt/Soularr_docker/config:/data
+      # Path to the Soularr logs directory
+      - /opt/Soularr_docker/logs:/data/logs
+    image: mrusse08/soularr:latest
+    command: sh -c "mkdir -p /data/logs && python soularr.py 2>&1 | tee -a /data/logs/soularr.log"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    container_name: soularr-dashboard
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Los_Angeles
+      # Path to the Soularr log file and failure list file for monitoring
+      - LOG_PATH=/data/logs/soularr.log
+      - FAILURE_PATH=/data/failure_list.txt
+    volumes:
+      # Path to the dashboard application directory (adjust based on your setup)
+      - /opt/Soularr_docker/dashboard:/app
+      # Path to the Soularr configuration directory for shared access with Soularr service
+      - /opt/Soularr_docker/config:/data
+      # Path to the Soularr logs directory for monitoring logs in real-time
+      - /opt/Soularr_docker/logs:/data/logs
+      # Docker socket for direct Docker access (use with caution)
+      - /var/run/docker.sock:/var/run/docker.sock
+    working_dir: /app
+
+
